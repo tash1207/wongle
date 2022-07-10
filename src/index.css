@@ -8,7 +8,7 @@ body {
 }
 
 h1 {
-	text-align: center;
+  text-align: center;
 }
 
 .board {
@@ -25,23 +25,23 @@ h1 {
 }
 
 .row {
-	display: grid;
-	grid-gap: 8px;
-	grid-template-columns: repeat(6, 1fr);
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .tile {
-	align-items: center;
+  align-items: center;
   color: white;
-	display: inline-flex;
-	font-size: 2em;
-	font-weight: bold;
-	justify-content: center;
-	margin-bottom: 8px;
-	min-height: 40px;
-	min-width: 40px;
-	padding: 4px;
-	text-transform: uppercase;
+  display: inline-flex;
+  font-size: 2em;
+  font-weight: bold;
+  justify-content: center;
+  margin-bottom: 8px;
+  min-height: 40px;
+  min-width: 40px;
+  padding: 4px;
+  text-transform: uppercase;
 }
 
 .tile.tbd {
