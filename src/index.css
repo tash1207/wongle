@@ -32,7 +32,7 @@ h1 {
 
 .tile {
 	align-items: center;
-	border: 1px solid grey;
+  color: white;
 	display: inline-flex;
 	font-size: 2em;
 	font-weight: bold;
@@ -42,4 +42,21 @@ h1 {
 	min-width: 40px;
 	padding: 4px;
 	text-transform: uppercase;
+}
+
+.tile.tbd {
+  border: 1px solid grey;
+  color: black;
+}
+
+.tile.absent {
+  background-color: #86888a;
+}
+
+.tile.correct {
+  background-color: green;
+}
+
+.tile.present {
+  background-color: #c9b43b;
 }

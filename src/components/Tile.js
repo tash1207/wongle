@@ -1,6 +1,8 @@
-const Tile = ({ letter }) => {
+const Tile = ({ tile }) => {
   return (
-    <div className='tile'>{letter}</div>
+    <div className={`tile ${tile.state || 'tbd'}`}>
+      {tile.letter}
+    </div>
   )
 }
 
