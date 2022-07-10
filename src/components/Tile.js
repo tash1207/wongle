@@ -1,6 +1,6 @@
 const Tile = ({ tile }) => {
   return (
-    <div className={`tile ${tile.state || 'tbd'}`}>
+    <div className={`tile ${tile.state}`}>
       {tile.letter}
     </div>
   )
