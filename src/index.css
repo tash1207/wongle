@@ -14,9 +14,32 @@ h1 {
 .board {
   border: 1px solid steelblue;
   border-radius: 8px;
+  display: grid;
+  grid-gap: 8px;
+  grid-template-rows: repeat(5, 1fr);
   margin: 20px auto;
-  max-width: 400px;
+  max-width: 420px;
   min-height: 400px;
   overflow: auto;
   padding: 20px;
+}
+
+.row {
+	display: grid;
+	grid-gap: 8px;
+	grid-template-columns: repeat(6, 1fr);
+}
+
+.tile {
+	align-items: center;
+	border: 1px solid grey;
+	display: inline-flex;
+	font-size: 2em;
+	font-weight: bold;
+	justify-content: center;
+	margin-bottom: 8px;
+	min-height: 40px;
+	min-width: 40px;
+	padding: 4px;
+	text-transform: uppercase;
 }

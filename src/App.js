@@ -1,12 +1,11 @@
+import Board from './components/Board'
+import Header from './components/Header'
+
 function App() {
   return (
     <>
-      <header>
-        <h1>Wongle</h1>
-      </header>
-      <div className="board">
-        Wongle board goes here :)
-      </div>
+      <Header />
+      <Board />
     </>
   );
 }
