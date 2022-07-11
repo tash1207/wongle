@@ -30,6 +30,7 @@ function App() {
       tiles : tiles || getDefaultTiles(),
     }
   }
+
   const Tile = (letter, state) => {
     return {
       letter : letter || '',
@@ -49,17 +50,45 @@ function App() {
   const onKeyDown = (e) => {
     const key = e.key;
     if (/^[a-z]$/i.test(key)) {
-      console.log(key);
-      const currentRow = rowsRef.current[currentRowIndexRef.current];
+      const currentRow = getCurrentRow();
       const currentTile = currentRow.tiles[currentTileIndexRef.current];
       currentTile.letter = key;
       setRows([...rowsRef.current]);
       if (currentTileIndexRef.current < 5) {
         setCurrentTileIndex(currentTileIndexRef.current + 1);
       }
-    } else {
-      console.log(`not a letter: ${e.key}`);
+    } else if (key === 'Enter') {
+      if (validateEnterPress()) {
+        // TODO update tile states to absent, correct, present
+        setCurrentRowIndex(currentRowIndexRef.current + 1);
+        setCurrentTileIndex(0);
+      }
+    } else if (key === 'Backspace' && currentTileIndexRef.current !== 0) {
+      const currentRow = getCurrentRow();
+      if (currentRow.tiles[currentTileIndexRef.current].letter === '') {
+        currentRow.tiles[currentTileIndexRef.current - 1].letter = '';
+        setCurrentTileIndex(currentTileIndexRef.current - 1);
+      } else {
+        currentRow.tiles[currentTileIndexRef.current].letter = '';
+      }
+      setRows([...rowsRef.current]);
     }
+  }
+
+  const validateEnterPress = () => {
+    if (currentTileIndexRef.current !== 5) {
+      return false;
+    }
+    if (getCurrentRow().tiles[currentTileIndexRef.current].letter === '') {
+      return false;
+    }
+    // TODO make sure word exists
+    // TODO make sure hard mode rules are followed
+    return true;
+  }
+
+  const getCurrentRow = () => {
+    return rowsRef.current[currentRowIndexRef.current];
   }
 
   const getDefaultTiles = () => {
