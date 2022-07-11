@@ -25,6 +25,8 @@ function App() {
     _setCurrentTileIndex(data);
   }
 
+  const correctWord = 'woolen';
+
   const Row = (tiles) => {
     return {
       tiles : tiles || getDefaultTiles(),
@@ -59,7 +61,7 @@ function App() {
       }
     } else if (key === 'Enter') {
       if (validateEnterPress()) {
-        // TODO update tile states to absent, correct, present
+        updateTiles();
         setCurrentRowIndex(currentRowIndexRef.current + 1);
         setCurrentTileIndex(0);
       }
@@ -85,6 +87,42 @@ function App() {
     // TODO make sure word exists
     // TODO make sure hard mode rules are followed
     return true;
+  }
+
+  const updateTiles = () => {
+    const currentTiles = getCurrentRow().tiles;
+    for (let i = 0; i < 6; i++) {
+      if (currentTiles[i].letter === correctWord[i]) {
+        currentTiles[i].state = 'correct';
+      } else if (!correctWord.includes(currentTiles[i].letter)) {
+        currentTiles[i].state = 'absent';
+      } else if (checkForLetterPresence(currentTiles[i].letter, currentTiles, i)) {
+        currentTiles[i].state = 'present';
+      }
+    }
+    setRows([...rowsRef.current]);
+  }
+
+  const checkForLetterPresence = (letter, currentTiles, index) => {
+    let correctInstances = 0;
+    let occurrences = 0;
+    let currentIndex = correctWord.indexOf(letter);
+    while (currentIndex !== -1) {
+      occurrences++;
+      if (currentTiles[currentIndex].letter === letter) {
+        correctInstances++;
+      }
+      currentIndex = correctWord.indexOf(letter, currentIndex + 1);
+    }
+    // Take other present states into consideration.
+    let otherPresentTiles = 0;
+    for (let i = 0; i < index; i++) {
+      if (currentTiles[i].letter === letter && currentTiles[i].state === 'present') {
+        otherPresentTiles++;
+      }
+    }
+
+    return occurrences !== correctInstances + otherPresentTiles;
   }
 
   const getCurrentRow = () => {
