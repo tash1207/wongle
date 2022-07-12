@@ -4,7 +4,7 @@ const Board = ({ rows }) => {
   return (
     <div className='board'>
       {rows.map((row, index) => (
-        <Row key={index} tiles={row.tiles} />
+        <Row key={index} row={row} />
       ))}
     </div>
   )

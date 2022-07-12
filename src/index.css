@@ -30,6 +30,10 @@ h1 {
   grid-template-columns: repeat(6, 1fr);
 }
 
+.row.notWord .tile {
+  color: red;
+}
+
 .tile {
   align-items: center;
   color: white;

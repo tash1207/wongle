@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Board from './components/Board'
 import Header from './components/Header'
+import wordList from './wordList.json'
 
 function App() {
   const [rows, _setRows] = useState([]);
@@ -25,10 +26,13 @@ function App() {
     _setCurrentTileIndex(data);
   }
 
+  const validWords = wordList;
   const wordBank = [
     'liquor',
     'regret',
-    'wongle',
+    'museum',
+    'rhythm',
+    'thwart',
     'woolen',
   ];
   const correctWord = wordBank[Math.floor(Math.random() * wordBank.length)];
@@ -36,6 +40,7 @@ function App() {
   const Row = (tiles) => {
     return {
       tiles : tiles || getDefaultTiles(),
+      isValidWord : true,
     }
   }
 
@@ -64,6 +69,8 @@ function App() {
   }, []);
 
   const onKeyDown = (e) => {
+    getCurrentRow().isValidWord = true;
+    setRows([...rowsRef.current]);
     const key = e.key;
     if (isLetter(key)) {
       const currentRow = getCurrentRow();
@@ -100,9 +107,15 @@ function App() {
     if (getCurrentRow().tiles[currentTileIndexRef.current].letter === '') {
       return false;
     }
-    // TODO make sure word exists
+    let currentWord = '';
+    for (const tile of getCurrentRow().tiles) {
+      currentWord += tile.letter;
+    }
+    const isValidWord = validWords.includes(currentWord);
+    getCurrentRow().isValidWord = isValidWord;
+    setRows([...rowsRef.current]);
+    return isValidWord;
     // TODO make sure hard mode rules are followed
-    return true;
   }
 
   const validateBackspacePress = () => {

@@ -1,9 +1,9 @@
 import Tile from './Tile'
 
-const Row = ({ tiles }) => {
+const Row = ({ row }) => {
   return (
-    <div className='row'>
-      {tiles.map((tile, index) => (
+    <div className={`row ${row.isValidWord ? '' : 'notWord'}`}>
+      {row.tiles.map((tile, index) => (
         <Tile key={index} tile={tile} />
       ))}
     </div>
