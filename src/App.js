@@ -234,7 +234,8 @@ function App() {
     if (currentRowIndexRef.current > 3) {
       for (const tile of currentTiles) {
         if (tile.state !== 'correct') {
-          showToast(`The word was ${correctWord.toUpperCase()}`);
+          showToast(`The word was ${correctWord.toUpperCase()}`,
+            /* displayForever= */ true);
           setGameOver(true);
           return;
         }
@@ -247,7 +248,7 @@ function App() {
         return;
       }
     }
-    showToast('You win!');
+    showToast('You win!', /* displayForever= */ true);
     setGameOver(true);
   }
 
@@ -268,11 +269,13 @@ function App() {
     return letters[Math.floor(Math.random() * 26)];
   }
 
-  const showToast = (message) => {
+  const showToast = (message, displayForever) => {
     setToast({ message: message, shown: true });
-    setTimeout(() => {
-      setToast({ message: '', shown: false });
-    }, "3000")
+    if (!displayForever) {
+      setTimeout(() => {
+        setToast({ message: '', shown: false });
+      }, "3000");
+    }
   }
 
   return (
