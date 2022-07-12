@@ -12,6 +12,7 @@ function App() {
   const [knownAbsentLetters, setKnownAbsentLetters] = useState([]);
   const [knownCorrectIndices, setKnownCorrectIndices] = useState([]);
   const [knownPresentLetters, setKnownPresentLetters] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
 
   const rowsRef = useRef(rows);
   const setRows = (data) => {
@@ -74,6 +75,10 @@ function App() {
   }, []);
 
   const onKeyDown = (e) => {
+    if (gameOver) {
+      return;
+    }
+
     getCurrentRow().isValidWord = true;
     setRows([...rowsRef.current]);
     const key = e.key;
@@ -87,6 +92,7 @@ function App() {
       }
     } else if (key === 'Enter' && validateEnterPress()) {
       updateTiles();
+      checkForGameOver();
       setCurrentRowIndex(currentRowIndexRef.current + 1);
       setCurrentTileIndex(0);
     } else if (key === 'Backspace' && validateBackspacePress()) {
@@ -219,6 +225,30 @@ function App() {
     }
 
     return occurrences !== correctInstances + otherPresentTiles;
+  }
+
+  const checkForGameOver = () => {
+    const currentTiles = getCurrentRow().tiles;
+
+    // Check for wrong last guess
+    if (currentRowIndexRef.current > 3) {
+      for (const tile of currentTiles) {
+        if (tile.state !== 'correct') {
+          showToast(`The word was ${correctWord.toUpperCase()}`);
+          setGameOver(true);
+          return;
+        }
+      }
+    }
+
+    // Check for correct guess
+    for (const tile of currentTiles) {
+      if (tile.state !== 'correct') {
+        return;
+      }
+    }
+    showToast('You win!');
+    setGameOver(true);
   }
 
   const getCurrentRow = () => {
