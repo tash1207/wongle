@@ -4,8 +4,8 @@ import Header from './components/Header'
 
 function App() {
   const [rows, _setRows] = useState([]);
-  const [currentRowIndex, _setCurrentRowIndex] = useState(1);
-  const [currentTileIndex, _setCurrentTileIndex] = useState(0);
+  const [currentRowIndex, _setCurrentRowIndex] = useState(0);
+  const [currentTileIndex, _setCurrentTileIndex] = useState(1);
 
   const rowsRef = useRef(rows);
   const setRows = (data) => {
@@ -25,7 +25,13 @@ function App() {
     _setCurrentTileIndex(data);
   }
 
-  const correctWord = 'woolen';
+  const wordBank = [
+    'liquor',
+    'regret',
+    'wongle',
+    'woolen',
+  ];
+  const correctWord = wordBank[Math.floor(Math.random() * wordBank.length)];
 
   const Row = (tiles) => {
     return {
@@ -42,6 +48,14 @@ function App() {
 
   useEffect(() => {
     const initRows = () => {
+      const row1Tiles = Row([
+        Tile(getRandomLetter()),
+        Tile(),
+        Tile(),
+        Tile(),
+        Tile(),
+        Tile(),
+      ]);
       setRows([row1Tiles, Row(), Row(), Row(), Row()]);
     }
 
@@ -51,21 +65,19 @@ function App() {
 
   const onKeyDown = (e) => {
     const key = e.key;
-    if (/^[a-z]$/i.test(key)) {
+    if (isLetter(key)) {
       const currentRow = getCurrentRow();
       const currentTile = currentRow.tiles[currentTileIndexRef.current];
-      currentTile.letter = key;
+      currentTile.letter = key.toLowerCase();
       setRows([...rowsRef.current]);
       if (currentTileIndexRef.current < 5) {
         setCurrentTileIndex(currentTileIndexRef.current + 1);
       }
-    } else if (key === 'Enter') {
-      if (validateEnterPress()) {
-        updateTiles();
-        setCurrentRowIndex(currentRowIndexRef.current + 1);
-        setCurrentTileIndex(0);
-      }
-    } else if (key === 'Backspace' && currentTileIndexRef.current !== 0) {
+    } else if (key === 'Enter' && validateEnterPress()) {
+      updateTiles();
+      setCurrentRowIndex(currentRowIndexRef.current + 1);
+      setCurrentTileIndex(0);
+    } else if (key === 'Backspace' && validateBackspacePress()) {
       const currentRow = getCurrentRow();
       if (currentRow.tiles[currentTileIndexRef.current].letter === '') {
         currentRow.tiles[currentTileIndexRef.current - 1].letter = '';
@@ -75,6 +87,10 @@ function App() {
       }
       setRows([...rowsRef.current]);
     }
+  }
+
+  const isLetter = (key) => {
+    return /^[a-z]$/i.test(key);
   }
 
   const validateEnterPress = () => {
@@ -89,6 +105,18 @@ function App() {
     return true;
   }
 
+  const validateBackspacePress = () => {
+    if (currentTileIndexRef.current === 0) {
+      return false;
+    }
+    if (currentRowIndexRef.current === 0 &&
+      currentTileIndexRef.current === 1) {
+      // Don't allow user to change starting letter of first guess.
+      return false;
+    }
+    return true;
+  }
+
   const updateTiles = () => {
     const currentTiles = getCurrentRow().tiles;
     for (let i = 0; i < 6; i++) {
@@ -98,6 +126,8 @@ function App() {
         currentTiles[i].state = 'absent';
       } else if (checkForLetterPresence(currentTiles[i].letter, currentTiles, i)) {
         currentTiles[i].state = 'present';
+      } else {
+        currentTiles[i].state = 'absent';
       }
     }
     setRows([...rowsRef.current]);
@@ -137,14 +167,10 @@ function App() {
     return defaultTiles;
   }
 
-  const row1Tiles = Row([
-    Tile('w', 'correct'),
-    Tile('o', 'correct'),
-    Tile('n', 'present'),
-    Tile('g', 'absent'),
-    Tile('l', 'present'),
-    Tile('e', 'present'),
-  ]);
+  const getRandomLetter = () => {
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    return letters[Math.floor(Math.random() * 26)];
+  }
 
   return (
     <>
