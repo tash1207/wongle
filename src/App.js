@@ -9,6 +9,9 @@ function App() {
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
   const [toast, setToast] = useState({message: '', shown: false});
+  const [knownAbsentLetters, setKnownAbsentLetters] = useState([]);
+  const [knownCorrectIndices, setKnownCorrectIndices] = useState([]);
+  const [knownPresentLetters, setKnownPresentLetters] = useState([]);
 
   const rowsRef = useRef(rows);
   const setRows = (data) => {
@@ -120,8 +123,46 @@ function App() {
       showToast('Not a valid word');
       return false;
     }
+    for (const knownAbsentLetter of knownAbsentLetters) {
+      if (currentWord.includes(knownAbsentLetter)) {
+        showToast(`Guess does not contain ${knownAbsentLetter.toUpperCase()}`);
+        return false;
+      }
+    }
+    for (const knownPresentLetter of knownPresentLetters) {
+      if (!currentWord.includes(knownPresentLetter)) {
+        showToast(`Guess must contain ${knownPresentLetter.toUpperCase()}`);
+        return false;
+      }
+    }
+    for (const knownIndex of knownCorrectIndices) {
+      if (currentWord[knownIndex] !== correctWord[knownIndex]) {
+        const indexString = getStringForIndexNumber(knownIndex);
+        showToast(`${indexString} letter must be
+          ${correctWord[knownIndex].toUpperCase()}`);
+        return false;
+      }
+    }
     return true;
-    // TODO make sure hard mode rules are followed
+  }
+
+  const getStringForIndexNumber = (index) => {
+    switch(index) {
+      case 0:
+        return '1st';
+      case 1:
+        return '2nd';
+      case 2:
+        return '3rd';
+      case 3:
+        return '4th';
+      case 4:
+        return '5th';
+      case 5:
+        return '6th';
+      default:
+        return '';
+    }
   }
 
   const validateBackspacePress = () => {
@@ -141,10 +182,16 @@ function App() {
     for (let i = 0; i < 6; i++) {
       if (currentTiles[i].letter === correctWord[i]) {
         currentTiles[i].state = 'correct';
+        knownCorrectIndices.push(i);
+        setKnownCorrectIndices(knownCorrectIndices);
       } else if (!correctWord.includes(currentTiles[i].letter)) {
         currentTiles[i].state = 'absent';
+        knownAbsentLetters.push(currentTiles[i].letter);
+        setKnownAbsentLetters(knownAbsentLetters);
       } else if (checkForLetterPresence(currentTiles[i].letter, currentTiles, i)) {
         currentTiles[i].state = 'present';
+        knownPresentLetters.push(currentTiles[i].letter);
+        setKnownPresentLetters(knownPresentLetters);
       } else {
         currentTiles[i].state = 'absent';
       }
