@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import Board from './components/Board'
 import Header from './components/Header'
+import Toast from './components/Toast'
 import wordList from './wordList.json'
 
 function App() {
   const [rows, _setRows] = useState([]);
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
+  const [toast, setToast] = useState({message: '', shown: false});
 
   const rowsRef = useRef(rows);
   const setRows = (data) => {
@@ -112,9 +114,13 @@ function App() {
       currentWord += tile.letter;
     }
     const isValidWord = validWords.includes(currentWord);
-    getCurrentRow().isValidWord = isValidWord;
-    setRows([...rowsRef.current]);
-    return isValidWord;
+    if (!isValidWord) {
+      getCurrentRow().isValidWord = false;
+      setRows([...rowsRef.current]);
+      showToast('Not a valid word');
+      return false;
+    }
+    return true;
     // TODO make sure hard mode rules are followed
   }
 
@@ -185,10 +191,18 @@ function App() {
     return letters[Math.floor(Math.random() * 26)];
   }
 
+  const showToast = (message) => {
+    setToast({ message: message, shown: true });
+    setTimeout(() => {
+      setToast({ message: '', shown: false });
+    }, "3000")
+  }
+
   return (
     <>
       <Header />
       <Board rows={rows} />
+      <Toast toast={toast} />
     </>
   );
 }

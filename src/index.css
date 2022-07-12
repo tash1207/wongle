@@ -64,3 +64,19 @@ h1 {
 .tile.present {
   background-color: #c9b43b;
 }
+
+.toastContainer {
+  background-color: black;
+  color: white;
+  display: none;
+  font-weight: bold;
+  left: 50%;
+  padding: 12px;
+  position: absolute;
+  top: 60px;
+  transform: translate(-50%, 0);
+}
+
+.toastContainer.shown {
+  display: block;
+}
