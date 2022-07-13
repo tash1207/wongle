@@ -131,7 +131,7 @@ function App() {
     }
     for (const knownAbsentLetter of knownAbsentLetters) {
       if (currentWord.includes(knownAbsentLetter)) {
-        showToast(`Guess does not contain ${knownAbsentLetter.toUpperCase()}`);
+        showToast(`Guess should not contain ${knownAbsentLetter.toUpperCase()}`);
         return false;
       }
     }
