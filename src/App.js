@@ -1,24 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import Board from './components/Board'
+import Button from './components/Button'
 import Header from './components/Header'
 import Toast from './components/Toast'
 import answerList from './answerList.json'
 import wordList from './wordList.json'
 
 function App() {
-  const [rows, _setRows] = useState([]);
+  const [correctWord, _setCorrectWord] = useState('');
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
   const [gameOver, _setGameOver] = useState(false);
+  const [knownAbsentLetters, _setKnownAbsentLetters] = useState([]);
+  const [knownCorrectIndices, _setKnownCorrectIndices] = useState([]);
+  const [knownPresentLetters, _setKnownPresentLetters] = useState([]);
+  const [rows, _setRows] = useState([]);
   const [toast, setToast] = useState({message: '', shown: false});
-  const [knownAbsentLetters, setKnownAbsentLetters] = useState([]);
-  const [knownCorrectIndices, setKnownCorrectIndices] = useState([]);
-  const [knownPresentLetters, setKnownPresentLetters] = useState([]);
 
-  const rowsRef = useRef(rows);
-  const setRows = (data) => {
-    rowsRef.current = data;
-    _setRows(data);
+  const correctWordRef = useRef(correctWord);
+  const setCorrectWord = (data) => {
+    correctWordRef.current = data;
+    _setCorrectWord(data);
   }
 
   const currentRowIndexRef = useRef(currentRowIndex);
@@ -39,9 +41,32 @@ function App() {
     _setGameOver(data);
   }
 
+  const knownAbsentLettersRef = useRef(knownAbsentLetters);
+  const setKnownAbsentLetters = (data) => {
+    knownAbsentLettersRef.current = data;
+    _setKnownAbsentLetters(data);
+  }
+
+  const knownCorrectIndicesRef = useRef(knownCorrectIndices);
+  const setKnownCorrectIndices = (data) => {
+    knownCorrectIndicesRef.current = data;
+    _setKnownCorrectIndices(data);
+  }
+
+  const knownPresentLettersRef = useRef(knownPresentLetters);
+  const setKnownPresentLetters = (data) => {
+    knownPresentLettersRef.current = data;
+    _setKnownPresentLetters(data);
+  }
+
+  const rowsRef = useRef(rows);
+  const setRows = (data) => {
+    rowsRef.current = data;
+    _setRows(data);
+  }
+
   const validWords = wordList;
   const wordBank =  answerList;
-  const correctWord = wordBank[Math.floor(Math.random() * wordBank.length)];
 
   const Row = (tiles) => {
     return {
@@ -58,21 +83,22 @@ function App() {
   }
 
   useEffect(() => {
-    const initRows = () => {
-      const row1Tiles = Row([
-        Tile(getRandomLetter()),
-        Tile(),
-        Tile(),
-        Tile(),
-        Tile(),
-        Tile(),
-      ]);
-      setRows([row1Tiles, Row(), Row(), Row(), Row()]);
-    }
-
+    setCorrectWord(getRandomWord());
     initRows();
     document.addEventListener('keydown', onKeyDown);
   }, []);
+
+  const initRows = () => {
+    const row1Tiles = Row([
+      Tile(getRandomLetter()),
+      Tile(),
+      Tile(),
+      Tile(),
+      Tile(),
+      Tile(),
+    ]);
+    setRows([row1Tiles, Row(), Row(), Row(), Row()]);
+  }
 
   const onKeyDown = (e) => {
     if (gameOverRef.current) {
@@ -129,23 +155,23 @@ function App() {
       showToast('Not a valid word');
       return false;
     }
-    for (const knownAbsentLetter of knownAbsentLetters) {
+    for (const knownAbsentLetter of knownAbsentLettersRef.current) {
       if (currentWord.includes(knownAbsentLetter)) {
         showToast(`Guess should not contain ${knownAbsentLetter.toUpperCase()}`);
         return false;
       }
     }
-    for (const knownPresentLetter of knownPresentLetters) {
+    for (const knownPresentLetter of knownPresentLettersRef.current) {
       if (!currentWord.includes(knownPresentLetter)) {
         showToast(`Guess must contain ${knownPresentLetter.toUpperCase()}`);
         return false;
       }
     }
-    for (const knownIndex of knownCorrectIndices) {
-      if (currentWord[knownIndex] !== correctWord[knownIndex]) {
+    for (const knownIndex of knownCorrectIndicesRef.current) {
+      if (currentWord[knownIndex] !== correctWordRef.current[knownIndex]) {
         const indexString = getStringForIndexNumber(knownIndex);
         showToast(`${indexString} letter must be
-          ${correctWord[knownIndex].toUpperCase()}`);
+          ${correctWordRef.current[knownIndex].toUpperCase()}`);
         return false;
       }
     }
@@ -186,18 +212,18 @@ function App() {
   const updateTiles = () => {
     const currentTiles = getCurrentRow().tiles;
     for (let i = 0; i < 6; i++) {
-      if (currentTiles[i].letter === correctWord[i]) {
+      if (currentTiles[i].letter === correctWordRef.current[i]) {
         currentTiles[i].state = 'correct';
-        knownCorrectIndices.push(i);
-        setKnownCorrectIndices(knownCorrectIndices);
-      } else if (!correctWord.includes(currentTiles[i].letter)) {
+        knownCorrectIndicesRef.current.push(i);
+        setKnownCorrectIndices(knownCorrectIndicesRef.current);
+      } else if (!correctWordRef.current.includes(currentTiles[i].letter)) {
         currentTiles[i].state = 'absent';
-        knownAbsentLetters.push(currentTiles[i].letter);
-        setKnownAbsentLetters(knownAbsentLetters);
+        knownAbsentLettersRef.current.push(currentTiles[i].letter);
+        setKnownAbsentLetters(knownAbsentLettersRef.current);
       } else if (checkForLetterPresence(currentTiles[i].letter, currentTiles, i)) {
         currentTiles[i].state = 'present';
-        knownPresentLetters.push(currentTiles[i].letter);
-        setKnownPresentLetters(knownPresentLetters);
+        knownPresentLettersRef.current.push(currentTiles[i].letter);
+        setKnownPresentLetters(knownPresentLettersRef.current);
       } else {
         currentTiles[i].state = 'absent';
       }
@@ -208,13 +234,13 @@ function App() {
   const checkForLetterPresence = (letter, currentTiles, index) => {
     let correctInstances = 0;
     let occurrences = 0;
-    let currentIndex = correctWord.indexOf(letter);
+    let currentIndex = correctWordRef.current.indexOf(letter);
     while (currentIndex !== -1) {
       occurrences++;
       if (currentTiles[currentIndex].letter === letter) {
         correctInstances++;
       }
-      currentIndex = correctWord.indexOf(letter, currentIndex + 1);
+      currentIndex = correctWordRef.current.indexOf(letter, currentIndex + 1);
     }
     // Take other present states into consideration.
     let otherPresentTiles = 0;
@@ -234,7 +260,7 @@ function App() {
     if (currentRowIndexRef.current > 3) {
       for (const tile of currentTiles) {
         if (tile.state !== 'correct') {
-          showToast(`The word was ${correctWord.toUpperCase()}`,
+          showToast(`The word was ${correctWordRef.current.toUpperCase()}`,
             /* displayForever= */ true);
           setGameOver(true);
           return;
@@ -248,7 +274,7 @@ function App() {
         return;
       }
     }
-    showToast('You win!', /* displayForever= */ true);
+    showToast('U Found Out!', /* displayForever= */ true);
     setGameOver(true);
   }
 
@@ -269,6 +295,10 @@ function App() {
     return letters[Math.floor(Math.random() * 26)];
   }
 
+  const getRandomWord = () => {
+    return wordBank[Math.floor(Math.random() * wordBank.length)];
+  }
+
   const showToast = (message, displayForever) => {
     setToast({ message: message, shown: true });
     if (!displayForever) {
@@ -278,11 +308,44 @@ function App() {
     }
   }
 
+  const onShare = () => {
+    let resultString = 'Wongle';
+    for (const row of rows) {
+      resultString += '\n';
+      for (const tile of row.tiles) {
+        if (tile.state === 'correct') {
+          resultString += '💚';
+        } else if (tile.state === 'present') {
+          resultString += '💛';
+        } else if (tile.state === 'absent') {
+          resultString += '⚪';
+        } else if (tile.state === 'tbd') {
+          break;
+        }
+      }
+    }
+    navigator.clipboard.writeText(resultString);
+  }
+
+  const onNewGame = () => {
+    setCorrectWord(getRandomWord());
+    setKnownAbsentLetters([]);
+    setKnownCorrectIndices([]);
+    setKnownPresentLetters([]);
+    setToast({ message: '', shown: false });
+    setCurrentRowIndex(0);
+    setCurrentTileIndex(1);
+    initRows();
+    setGameOver(false);
+  }
+
   return (
     <>
       <Header />
       <Board rows={rows} />
       <Toast toast={toast} />
+      {gameOver && <Button text='Copy results' onClick={onShare} />}
+      {gameOver && <Button text='New game' onClick={onNewGame} />}
     </>
   );
 }

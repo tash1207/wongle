@@ -80,3 +80,28 @@ h1 {
 .toastContainer.shown {
   display: block;
 }
+
+.buttonContainer {
+  text-align: center;
+}
+
+.button {
+  background-color: #39d;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 8px;
+  padding: 20px;
+}
+
+.button:hover {
+  transform: scale(0.99);
+}
+
+.button:active {
+  transform: scale(1.1);
+}
