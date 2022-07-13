@@ -2,17 +2,18 @@ import { useEffect, useRef, useState } from 'react'
 import Board from './components/Board'
 import Header from './components/Header'
 import Toast from './components/Toast'
+import answerList from './answerList.json'
 import wordList from './wordList.json'
 
 function App() {
   const [rows, _setRows] = useState([]);
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
+  const [gameOver, _setGameOver] = useState(false);
   const [toast, setToast] = useState({message: '', shown: false});
   const [knownAbsentLetters, setKnownAbsentLetters] = useState([]);
   const [knownCorrectIndices, setKnownCorrectIndices] = useState([]);
   const [knownPresentLetters, setKnownPresentLetters] = useState([]);
-  const [gameOver, setGameOver] = useState(false);
 
   const rowsRef = useRef(rows);
   const setRows = (data) => {
@@ -32,15 +33,14 @@ function App() {
     _setCurrentTileIndex(data);
   }
 
+  const gameOverRef = useRef(gameOver);
+  const setGameOver = (data) => {
+    gameOverRef.current = data;
+    _setGameOver(data);
+  }
+
   const validWords = wordList;
-  const wordBank = [
-    'liquor',
-    'regret',
-    'museum',
-    'rhythm',
-    'thwart',
-    'woolen',
-  ];
+  const wordBank =  answerList;
   const correctWord = wordBank[Math.floor(Math.random() * wordBank.length)];
 
   const Row = (tiles) => {
@@ -75,7 +75,7 @@ function App() {
   }, []);
 
   const onKeyDown = (e) => {
-    if (gameOver) {
+    if (gameOverRef.current) {
       return;
     }
 
