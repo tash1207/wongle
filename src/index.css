@@ -11,6 +11,11 @@ h1 {
   text-align: center;
 }
 
+#root {
+  margin: 0 auto;
+  max-width: 500px;
+}
+
 .board {
   border: 1px solid steelblue;
   border-radius: 8px;
@@ -104,4 +109,24 @@ h1 {
 
 .button:active {
   transform: scale(1.1);
+}
+
+.keyboard {
+  height: 200px;
+}
+
+.keyboardRow {
+  display: flex;
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+.keyboardKey {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  height: 44px;
+  justify-content: center;
+  margin-right: 4px;
+  text-transform: uppercase;
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Board from './components/Board'
 import Button from './components/Button'
 import Header from './components/Header'
+import Keyboard from './components/Keyboard'
 import Toast from './components/Toast'
 import answerList from './answerList.json'
 import wordList from './wordList.json'
@@ -346,6 +347,7 @@ function App() {
       <Toast toast={toast} />
       {gameOver && <Button text='Copy results' onClick={onShare} />}
       {gameOver && <Button text='New game' onClick={onNewGame} />}
+      <Keyboard />
     </>
   );
 }
