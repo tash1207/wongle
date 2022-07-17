@@ -16,6 +16,11 @@ h1 {
   max-width: 500px;
 }
 
+.dark {
+  background-color: black;
+  color: white;
+}
+
 .board {
   border: 1px solid steelblue;
   border-radius: 8px;
@@ -35,7 +40,8 @@ h1 {
   grid-template-columns: repeat(6, 1fr);
 }
 
-.row.notWord .tile {
+.row.notWord .tile,
+.dark .row.notWord .tile {
   color: red;
 }
 
@@ -58,9 +64,18 @@ h1 {
   color: black;
 }
 
+.dark .tile.tbd {
+  color: white;
+}
+
 .keyboardKey.absent,
 .tile.absent {
   background-color: #86888a;
+}
+
+.dark .keyboardKey.absent,
+.dark .tile.absent {
+  background-color: #3a3a3a;
 }
 
 .keyboardKey.correct,
@@ -73,8 +88,14 @@ h1 {
   background-color: #c9b43b;
 }
 
+.dark .keyboardKey.present,
+.dark .tile.present {
+  background-color: #c4a710;
+}
+
 .toastContainer {
   background-color: black;
+  border-radius: 4px;
   color: white;
   display: none;
   font-weight: bold;
@@ -83,6 +104,11 @@ h1 {
   position: absolute;
   top: 60px;
   transform: translate(-50%, 0);
+}
+
+.dark .toastContainer {
+  background-color: white;
+  color: black;
 }
 
 .toastContainer.shown {

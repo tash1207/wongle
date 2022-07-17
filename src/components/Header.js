@@ -1,7 +1,9 @@
-const Header = () => {
+const Header = ({ toggleDarkMode }) => {
   return (
-    <header>
-      <h1>Wongle</h1>
+    <header onDoubleClick={() => toggleDarkMode()}>
+      <h1>
+        Wongle
+      </h1>
     </header>
   )
 }

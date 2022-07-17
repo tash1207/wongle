@@ -11,6 +11,7 @@ function App() {
   const [correctWord, _setCorrectWord] = useState('');
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
+  const [darkMode, _setDarkMode] = useState(false);
   const [gameOver, _setGameOver] = useState(false);
   const [kbRow1, _setKbRow1] = useState([]);
   const [kbRow2, _setKbRow2] = useState([]);
@@ -37,6 +38,12 @@ function App() {
   const setCurrentTileIndex = (data) => {
     currentTileIndexRef.current = data;
     _setCurrentTileIndex(data);
+  }
+
+  const darkModeRef = useRef(darkMode);
+  const setDarkMode = (data) => {
+    darkModeRef.current = data;
+    _setDarkMode(data);
   }
 
   const gameOverRef = useRef(gameOver);
@@ -384,7 +391,7 @@ function App() {
         } else if (tile.state === 'present') {
           resultString += '💛';
         } else if (tile.state === 'absent') {
-          resultString += '⚪';
+          resultString += darkMode ? '⚫' : '⚪';
         } else if (tile.state === 'tbd') {
           break;
         }
@@ -406,9 +413,15 @@ function App() {
     setGameOver(false);
   }
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkModeRef.current);
+    darkModeRef.current ? document.body.classList.add('dark') :
+      document.body.classList.remove('dark');
+  }
+
   return (
     <>
-      <Header />
+      <Header toggleDarkMode={toggleDarkMode} />
       <Board rows={rows} />
       <Toast toast={toast} />
       {gameOver && <Button text='Copy results' onClick={onShare} />}
