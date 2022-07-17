@@ -18,6 +18,8 @@ function App() {
   const [kbRow3, _setKbRow3] = useState([]);
   const [knownAbsentLetters, _setKnownAbsentLetters] = useState([]);
   const [knownCorrectIndices, _setKnownCorrectIndices] = useState([]);
+  const [knownIncorrectIndices, _setKnownIncorrectIndices] =
+    useState({0 : [], 1 : [], 2 : [], 3 : [], 4 : [], 5 : []});
   const [knownPresentLetters, _setKnownPresentLetters] = useState([]);
   const [rows, _setRows] = useState([]);
   const [toast, setToast] = useState({message: '', shown: false});
@@ -80,6 +82,12 @@ function App() {
   const setKnownCorrectIndices = (data) => {
     knownCorrectIndicesRef.current = data;
     _setKnownCorrectIndices(data);
+  }
+
+  const knownIncorrectIndicesRef = useRef(knownIncorrectIndices);
+  const setKnownIncorrectIndices = (data) => {
+    knownIncorrectIndicesRef.current = data;
+    _setKnownIncorrectIndices(data);
   }
 
   const knownPresentLettersRef = useRef(knownPresentLetters);
@@ -235,6 +243,14 @@ function App() {
         return false;
       }
     }
+    for (let i = 0; i < 6; i++) {
+      if (knownIncorrectIndicesRef.current[i].includes(currentWord[i])) {
+        const indexString = getStringForIndexNumber(i);
+        showToast(`${indexString} letter cannot be
+          ${currentWord[i].toUpperCase()}`);
+        return false;
+      }
+    }
     return true;
   }
 
@@ -287,6 +303,8 @@ function App() {
         updateKeyboard(currentTiles[i].letter, 'present');
         knownPresentLettersRef.current.push(currentTiles[i].letter);
         setKnownPresentLetters(knownPresentLettersRef.current);
+        knownIncorrectIndicesRef.current[i].push(currentTiles[i].letter);
+        setKnownIncorrectIndices(knownIncorrectIndicesRef.current);
       } else {
         currentTiles[i].state = 'absent';
       }
@@ -403,6 +421,9 @@ function App() {
     setCorrectWord(getRandomWord());
     setKnownAbsentLetters([]);
     setKnownCorrectIndices([]);
+    setKnownIncorrectIndices({
+      0 : [], 1 : [], 2 : [], 3 : [], 4 : [], 5 : []
+    });
     setKnownPresentLetters([]);
     setToast({ message: '', shown: false });
     setCurrentRowIndex(0);
