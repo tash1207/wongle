@@ -58,14 +58,17 @@ h1 {
   color: black;
 }
 
+.keyboardKey.absent,
 .tile.absent {
   background-color: #86888a;
 }
 
+.keyboardKey.correct,
 .tile.correct {
   background-color: green;
 }
 
+.keyboardKey.present,
 .tile.present {
   background-color: #c9b43b;
 }
@@ -123,10 +126,18 @@ h1 {
 
 .keyboardKey {
   align-items: center;
+  border: 1px solid transparent;
+  color: white;
   display: flex;
   flex: 1;
+  font-weight: bold;
   height: 44px;
   justify-content: center;
   margin-right: 4px;
   text-transform: uppercase;
+}
+
+.keyboardKey.tbd {
+  border: 1px solid #bbb;
+  color: black;
 }

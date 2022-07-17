@@ -1,15 +1,11 @@
 import KeyboardRow from './KeyboardRow'
 
-const Keyboard = () => {
-  const firstRow = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
-  const secondRow = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
-  const thirdRow = ['ent', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'bksp'];
-
+const Keyboard = ({ rows, onKeyPress }) => {
   return (
     <div className='keyboard'>
-      <KeyboardRow keys={firstRow} />
-      <KeyboardRow keys={secondRow} />
-      <KeyboardRow keys={thirdRow} />
+      {rows.map((row, index) => (
+        <KeyboardRow key={index} keys={row} onKeyPress={onKeyPress} />
+      ))}
     </div>
   )
 }

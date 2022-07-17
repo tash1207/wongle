@@ -1,6 +1,9 @@
-const KeyboardKey = ({ letter }) => {
+const KeyboardKey = ({ keyboardKey, onKeyPress }) => {
   return (
-    <button className='keyboardKey'>{letter}</button>
+    <button className={`keyboardKey ${keyboardKey.state}`}
+      onClick={() => onKeyPress(keyboardKey.key)}>
+      {keyboardKey.letter}
+    </button>
   )
 }
 
