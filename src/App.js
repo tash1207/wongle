@@ -289,7 +289,6 @@ function App() {
         setKnownPresentLetters(knownPresentLettersRef.current);
       } else {
         currentTiles[i].state = 'absent';
-        updateKeyboard(currentTiles[i].letter, 'absent');
       }
     }
     setRows([...rowsRef.current]);
