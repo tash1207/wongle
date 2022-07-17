@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Board from './components/Board'
 import Button from './components/Button'
 import Header from './components/Header'
+import Keyboard from './components/Keyboard'
 import Toast from './components/Toast'
 import answerList from './answerList.json'
 import wordList from './wordList.json'
@@ -11,6 +12,9 @@ function App() {
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
   const [gameOver, _setGameOver] = useState(false);
+  const [kbRow1, _setKbRow1] = useState([]);
+  const [kbRow2, _setKbRow2] = useState([]);
+  const [kbRow3, _setKbRow3] = useState([]);
   const [knownAbsentLetters, _setKnownAbsentLetters] = useState([]);
   const [knownCorrectIndices, _setKnownCorrectIndices] = useState([]);
   const [knownPresentLetters, _setKnownPresentLetters] = useState([]);
@@ -39,6 +43,24 @@ function App() {
   const setGameOver = (data) => {
     gameOverRef.current = data;
     _setGameOver(data);
+  }
+
+  const kbRow1Ref = useRef(kbRow1);
+  const setKbRow1 = (data) => {
+    kbRow1Ref.current = data;
+    _setKbRow1(data);
+  }
+
+  const kbRow2Ref = useRef(kbRow2);
+  const setKbRow2 = (data) => {
+    kbRow2Ref.current = data;
+    _setKbRow2(data);
+  }
+
+  const kbRow3Ref = useRef(kbRow3);
+  const setKbRow3 = (data) => {
+    kbRow3Ref.current = data;
+    _setKbRow3(data);
   }
 
   const knownAbsentLettersRef = useRef(knownAbsentLetters);
@@ -75,16 +97,31 @@ function App() {
     }
   }
 
-  const Tile = (letter, state) => {
+  const Tile = (letter) => {
     return {
       letter : letter || '',
-      state : state || 'tbd',
+      state : 'tbd',
+    }
+  }
+
+  const Key = (letter) => {
+    let key = letter;
+    if (letter === 'ent') {
+      key = 'Enter';
+    } else if (letter === 'bksp') {
+      key = 'Backspace';
+    }
+    return {
+      letter : letter,
+      key : key,
+      state : 'tbd',
     }
   }
 
   useEffect(() => {
     setCorrectWord(getRandomWord());
     initRows();
+    initKeyboard();
     document.addEventListener('keydown', onKeyDown);
   }, []);
 
@@ -100,14 +137,30 @@ function App() {
     setRows([row1Tiles, Row(), Row(), Row(), Row()]);
   }
 
+  const initKeyboard = () => {
+    const topKeys = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
+    const midKeys = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
+    const botKeys = ['ent', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'bksp'];
+
+    const firstRow = topKeys.map((letter) => Key(letter));
+    const secondRow = midKeys.map((letter) => Key(letter));
+    const thirdRow = botKeys.map((letter) => Key(letter));
+
+    setKbRow1(firstRow);
+    setKbRow2(secondRow);
+    setKbRow3(thirdRow);
+  }
+
   const onKeyDown = (e) => {
+    onKeyboardPress(e.key);
+  }
+
+  const onKeyboardPress = (key) => {
     if (gameOverRef.current) {
       return;
     }
-
     getCurrentRow().isValidWord = true;
     setRows([...rowsRef.current]);
-    const key = e.key;
     if (isLetter(key)) {
       const currentRow = getCurrentRow();
       const currentTile = currentRow.tiles[currentTileIndexRef.current];
@@ -214,21 +267,34 @@ function App() {
     for (let i = 0; i < 6; i++) {
       if (currentTiles[i].letter === correctWordRef.current[i]) {
         currentTiles[i].state = 'correct';
+        updateKeyboard(currentTiles[i].letter, 'correct');
         knownCorrectIndicesRef.current.push(i);
         setKnownCorrectIndices(knownCorrectIndicesRef.current);
       } else if (!correctWordRef.current.includes(currentTiles[i].letter)) {
         currentTiles[i].state = 'absent';
+        updateKeyboard(currentTiles[i].letter, 'absent');
         knownAbsentLettersRef.current.push(currentTiles[i].letter);
         setKnownAbsentLetters(knownAbsentLettersRef.current);
       } else if (checkForLetterPresence(currentTiles[i].letter, currentTiles, i)) {
         currentTiles[i].state = 'present';
+        updateKeyboard(currentTiles[i].letter, 'present');
         knownPresentLettersRef.current.push(currentTiles[i].letter);
         setKnownPresentLetters(knownPresentLettersRef.current);
       } else {
         currentTiles[i].state = 'absent';
+        updateKeyboard(currentTiles[i].letter, 'absent');
       }
     }
     setRows([...rowsRef.current]);
+  }
+
+  const updateKeyboard = (letter, state) => {
+    setKbRow1(kbRow1Ref.current.map((key) =>
+      key.letter === letter ? {...key, state: state} : key));
+    setKbRow2(kbRow2Ref.current.map((key) =>
+      key.letter === letter ? {...key, state: state} : key));
+    setKbRow3(kbRow3Ref.current.map((key) =>
+      key.letter === letter ? {...key, state: state} : key));
   }
 
   const checkForLetterPresence = (letter, currentTiles, index) => {
@@ -336,6 +402,7 @@ function App() {
     setCurrentRowIndex(0);
     setCurrentTileIndex(1);
     initRows();
+    initKeyboard();
     setGameOver(false);
   }
 
@@ -346,6 +413,8 @@ function App() {
       <Toast toast={toast} />
       {gameOver && <Button text='Copy results' onClick={onShare} />}
       {gameOver && <Button text='New game' onClick={onNewGame} />}
+      <Keyboard rows={[kbRow1, kbRow2, kbRow3]}
+        onKeyPress={onKeyboardPress} />
     </>
   );
 }
