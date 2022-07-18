@@ -307,6 +307,8 @@ function App() {
         setKnownIncorrectIndices(knownIncorrectIndicesRef.current);
       } else {
         currentTiles[i].state = 'absent';
+        knownIncorrectIndicesRef.current[i].push(currentTiles[i].letter);
+        setKnownIncorrectIndices(knownIncorrectIndicesRef.current);
       }
     }
     setRows([...rowsRef.current]);
