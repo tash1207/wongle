@@ -1,4 +1,4 @@
-const ShareButton = ({ text, onClick }) => {
+const Button = ({ text, onClick }) => {
   return (
     <div className='buttonContainer'>
       <button className='button' onClick={onClick}>
@@ -8,4 +8,4 @@ const ShareButton = ({ text, onClick }) => {
   )
 }
 
-export default ShareButton;
+export default Button;

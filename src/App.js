@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import Board from './components/Board'
 import Button from './components/Button'
 import Header from './components/Header'
+import HelpModal from './components/HelpModal'
 import Keyboard from './components/Keyboard'
+import SettingsModal from './components/SettingsModal'
 import Toast from './components/Toast'
 import answerList from './answerList.json'
 import wordList from './wordList.json'
@@ -12,6 +14,8 @@ function App() {
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
   const [darkMode, _setDarkMode] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [gameOver, _setGameOver] = useState(false);
   const [kbRow1, _setKbRow1] = useState([]);
   const [kbRow2, _setKbRow2] = useState([]);
@@ -177,6 +181,7 @@ function App() {
     getCurrentRow().isValidWord = true;
     setRows([...rowsRef.current]);
     if (isLetter(key)) {
+      // TODO: Move focus off buttons and onto board.
       const currentRow = getCurrentRow();
       const currentTile = currentRow.tiles[currentTileIndexRef.current];
       currentTile.letter = key.toLowerCase();
@@ -441,9 +446,19 @@ function App() {
       document.body.classList.remove('dark');
   }
 
+  const onHelpClick = () => {
+    setShowHelpModal(!showHelpModal);
+  }
+
+  const onSettingsClick = () => {
+    setShowSettingsModal(!showSettingsModal);
+  }
+
   return (
     <>
-      <Header toggleDarkMode={toggleDarkMode} />
+      <Header onHelpClick={onHelpClick} onSettingsClick={onSettingsClick} />
+      {showHelpModal && <HelpModal/>}
+      {showSettingsModal && <SettingsModal toggleDarkMode={toggleDarkMode} />}
       <Board rows={rows} />
       <Toast toast={toast} />
       {gameOver && <Button text='Copy results' onClick={onShare} />}

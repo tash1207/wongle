@@ -1,9 +1,11 @@
-const Header = ({ toggleDarkMode }) => {
+import Button from './Button'
+
+const Header = ({ onHelpClick, onSettingsClick }) => {
   return (
-    <header onDoubleClick={() => toggleDarkMode()}>
-      <h1>
-        Wongle
-      </h1>
+    <header className="appHeader">
+      <Button text='Help' onClick={onHelpClick} />
+      <h1>Wongle</h1>
+      <Button text='Settings' onClick={onSettingsClick} />
     </header>
   )
 }
