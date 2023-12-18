@@ -457,8 +457,10 @@ function App() {
   return (
     <>
       <Header onHelpClick={onHelpClick} onSettingsClick={onSettingsClick} />
-      {showHelpModal && <HelpModal/>}
-      {showSettingsModal && <SettingsModal toggleDarkMode={toggleDarkMode} />}
+      {showHelpModal &&
+        <HelpModal closeModal={onHelpClick} />}
+      {showSettingsModal &&
+        <SettingsModal closeModal={onSettingsClick} toggleDarkMode={toggleDarkMode} />}
       <Board rows={rows} />
       <Toast toast={toast} />
       {gameOver && <Button text='Copy results' onClick={onShare} />}

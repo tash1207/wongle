@@ -1,6 +1,9 @@
-const HelpModal = () => {
+import CloseButton from './CloseButton'
+
+const HelpModal = ({ closeModal }) => {
   return (
     <div className="dialog">
+      <CloseButton onClick={closeModal} />
       <h1>How To Play</h1>
       <ul>
         <li>{"Each guess must be a valid 6-letter word."}</li>

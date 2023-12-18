@@ -192,4 +192,8 @@ li {
 .dark .dialog {
   background-color: black;
   border: 1px solid white;
-  }
+}
+
+.closeButton {
+  position: absolute;
+}
