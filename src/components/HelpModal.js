@@ -9,7 +9,7 @@ const HelpModal = ({ closeModal }) => {
         <li>{"Each guess must be a valid 6-letter word."}</li>
         <li>{"First guess must start with the predetermined letter. " +
         "This letter is not guaranteed to be in the word unless playing " + 
-          "in Tato mode (coming soon)."}</li>
+          "in Tato mode."}</li>
         <li>{"Subsequent guesses must be valid guesses given the previous " + 
         "information for what letters are or aren't in the word."}</li>
       </ul>

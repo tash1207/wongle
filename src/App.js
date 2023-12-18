@@ -14,6 +14,7 @@ function App() {
   const [currentRowIndex, _setCurrentRowIndex] = useState(0);
   const [currentTileIndex, _setCurrentTileIndex] = useState(1);
   const [darkMode, _setDarkMode] = useState(false);
+  const [tatoMode, _setTatoMode] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [gameOver, _setGameOver] = useState(false);
@@ -50,6 +51,12 @@ function App() {
   const setDarkMode = (data) => {
     darkModeRef.current = data;
     _setDarkMode(data);
+  }
+
+  const tatoModeRef = useRef(tatoMode);
+  const setTatoMode = (data) => {
+    tatoModeRef.current = data;
+    _setTatoMode(data);
   }
 
   const gameOverRef = useRef(gameOver);
@@ -116,10 +123,10 @@ function App() {
     }
   }
 
-  const Tile = (letter) => {
+  const Tile = (letter, state) => {
     return {
       letter : letter || '',
-      state : 'tbd',
+      state : state || 'tbd',
     }
   }
 
@@ -146,7 +153,7 @@ function App() {
 
   const initRows = () => {
     const row1Tiles = Row([
-      Tile(getRandomLetter()),
+      tatoModeRef.current ? Tile(correctWordRef.current[0], 'correct') : Tile(getRandomLetter()),
       Tile(),
       Tile(),
       Tile(),
@@ -446,6 +453,11 @@ function App() {
       document.body.classList.remove('dark');
   }
 
+  const toggleTatoMode = () => {
+    setTatoMode(!tatoModeRef.current);
+    onNewGame();
+  }
+
   const onHelpClick = () => {
     setShowHelpModal(!showHelpModal);
   }
@@ -456,11 +468,11 @@ function App() {
 
   return (
     <>
-      <Header onHelpClick={onHelpClick} onSettingsClick={onSettingsClick} />
+      <Header tatoModeEnabled={tatoModeRef.current} onHelpClick={onHelpClick} onSettingsClick={onSettingsClick} />
       {showHelpModal &&
         <HelpModal closeModal={onHelpClick} />}
       {showSettingsModal &&
-        <SettingsModal closeModal={onSettingsClick} toggleDarkMode={toggleDarkMode} />}
+        <SettingsModal closeModal={onSettingsClick} toggleDarkMode={toggleDarkMode} toggleTatoMode={toggleTatoMode} />}
       <Board rows={rows} />
       <Toast toast={toast} />
       {gameOver && <Button text='Copy results' onClick={onShare} />}
