@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/wongle/static/css/main.172fdaac.css",
-    "main.js": "/wongle/static/js/main.da9d79ec.js",
+    "main.css": "/wongle/static/css/main.85757d05.css",
+    "main.js": "/wongle/static/js/main.12ff98a5.js",
     "static/js/787.5e929991.chunk.js": "/wongle/static/js/787.5e929991.chunk.js",
     "index.html": "/wongle/index.html",
-    "main.172fdaac.css.map": "/wongle/static/css/main.172fdaac.css.map",
-    "main.da9d79ec.js.map": "/wongle/static/js/main.da9d79ec.js.map",
+    "main.85757d05.css.map": "/wongle/static/css/main.85757d05.css.map",
+    "main.12ff98a5.js.map": "/wongle/static/js/main.12ff98a5.js.map",
     "787.5e929991.chunk.js.map": "/wongle/static/js/787.5e929991.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.172fdaac.css",
-    "static/js/main.da9d79ec.js"
+    "static/css/main.85757d05.css",
+    "static/js/main.12ff98a5.js"
   ]
 }
