@@ -197,3 +197,13 @@ li {
 .closeButton {
   position: absolute;
 }
+
+@media (max-width: 550px) {
+  .board {
+    max-width: 380px;
+  }
+  .dialog {
+    margin: 50px;
+    width: 380px;
+  }
+}
