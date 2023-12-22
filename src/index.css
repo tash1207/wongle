@@ -183,9 +183,11 @@ li {
   background-color: white;
   border: 1px solid black;
   border-radius: 8px;
-  margin: 32px;
+  left: 0;
+  margin: 32px auto;
   padding: 8px;
   position: absolute;
+  right: 0;
   width: 420px;
 }
 
@@ -198,12 +200,11 @@ li {
   position: absolute;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 520px) {
   .board {
     max-width: 380px;
   }
   .dialog {
-    margin: 50px;
     width: 380px;
   }
 }
